@@ -66,17 +66,42 @@
         $user_value = $form_state['values']['user_value'];
         $user_direction = $form_state['values']['user_direction'];
         $user_phrase = $form_state['values']['user_phrase'];
-        $cipher_output = array($user_value, $user_direction, $user_phrase);
 
-        $_SESSION['cipher_output'] = $cipher_output;
+        $alphabet = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
+
+        $spaces = $form_state['values']['user_value'];
+        $direction = $form_state['values']['user_direction'];
+        $phrase = $form_state['values']['user_phrase'];
+        $lower_phrase = strtolower($phrase);
+        $split_phrase = str_split($lower_phrase);
+        $output = '';
+
+        if (in_array($direction, array('left', 'Left', 'LEFT'))) {
+            $direction = -1;
+        } else {
+            $direction = 1;
+        }
+
+        foreach ($split_phrase as $character) {
+
+            if (in_array($character, $alphabet)) {
+                $location = array_search($character, $alphabet);
+                $new_location = ($spaces * $direction) + $location;
+                if ($new_location < 0) {
+                    $new_location += 26;
+                } elseif ($new_location > 25) {
+                    $new_location -= 26;
+                }
+                $output .= $alphabet[$new_location];
+            } else {
+                $output .= $character;
+            }
+        }
+        $_SESSION['cipher_output'] = $output;
         $form_state['redirect'] = 'cipher_success_page';
-      }
+    }
 
-      function cipher_success() {
-          $output = '<ul>';
-          foreach($_SESSION['cipher_output'] as $value) {
-            $output = $output . '<li>' .$value . '</li>';
-          }
-          $output = $output . '</ul>';
-          return "Hooray! $output";
+    function cipher_success() {
+        return '<p>'.$_SESSION['cipher_output'].'</p>';
       }
