@@ -1,0 +1,5 @@
+name = Cipher
+description = Shift Cipher Module
+package = Epicodus Code Reviews
+core = 7.x
+files[] = cipher.module

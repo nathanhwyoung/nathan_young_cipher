@@ -1,0 +1,34 @@
+<?php
+
+    function cipher_menu() {
+        $items = array();
+        $items['cipher'] = array(
+            'title' => 'Shift Cipher',
+            'type' => 'MENU_NORMAL_ITEM',
+            'access callback' => TRUE,
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('cipher_form'),
+        );
+        $items['cipher_success_page'] = array(
+            'title' => 'Cipher Success!',
+            'page callback' => 'cipher_success',
+            'access callback' => TRUE,
+            'type' => MENU_CALLBACK,
+        );
+        return $items;
+    }
+
+    function cipher_form() {
+        $form['user_input'] = array(
+            '#title' => 'Input',
+            '#type' => 'textfield',
+            '#description' => t('Please enter the word you want cipher-ized.'),
+            // '#element_validate' => array('element_validate_integer_positive'),
+            '#required' => TRUE,
+        );
+        $form['submit'] = array(
+            '#type' => 'submit',
+            '#value' => 'Go',
+        );
+        return $form;
+    }
