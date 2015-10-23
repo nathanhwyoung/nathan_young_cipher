@@ -38,7 +38,7 @@
             '#title' => 'Phrase',
             '#type' => 'textfield',
             '#description' => t('Please enter the phrase you want cipher-ized.'),
-            // '#element_validate' => array('element_validate_integer_positive'),
+            '#element_validate' => array('element_validate_all'),
             '#required' => TRUE,
         );
         $form['submit'] = array(
@@ -51,6 +51,14 @@
     function element_validate_direction($element) {
         if (!in_array($element['#value'], array('left', 'Left', 'LEFT', 'right', 'Right', 'RIGHT'))) {
             form_error($element, t('Direction must be either left or right'));
+        }
+    }
+
+    function element_validate_all($element, &$form_state) {
+        $pattern =  '/[^A-Za-z0-9^\'^\:^\,^\-^\!^\(^\)^\.^\?^\"^\;\s]/';
+        $user_phrase_check = $form_state['values']['user_phrase'];
+        if (preg_match_all($pattern, $user_phrase_check)) {
+            form_set_error('user_phrase', 'Input must only consist of letters, numbers, spaces and punctuation!');
         }
     }
 
