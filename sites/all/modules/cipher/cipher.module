@@ -31,7 +31,7 @@
             '#title' => 'Shift Direction',
             '#type' => 'textfield',
             '#description' => t('Please enter the direction you want the letters shifted.'),
-            // '#element_validate' => array('element_validate_direction'),
+            '#element_validate' => array('element_validate_direction'),
             '#required' => TRUE,
         );
         $form['user_phrase'] = array(
@@ -49,8 +49,8 @@
     }
 
     function element_validate_direction($element) {
-        if (($element['#value'] != 'right') || ($element['#value'] != 'left')) {
-            form_error($element, t('Input must be either \'right\' or \'left\'.'));
+        if (!in_array($element['#value'], array('left', 'Left', 'LEFT', 'right', 'Right', 'RIGHT'))) {
+            form_error($element, t('Direction must be either left or right'));
         }
     }
 
