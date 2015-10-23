@@ -4,25 +4,40 @@
         $items = array();
         $items['cipher'] = array(
             'title' => 'Shift Cipher',
-            'type' => 'MENU_NORMAL_ITEM',
+            'type' => MENU_NORMAL_ITEM,
             'access callback' => TRUE,
             'page callback' => 'drupal_get_form',
             'page arguments' => array('cipher_form'),
-        );
-        $items['cipher_success_page'] = array(
-            'title' => 'Cipher Success!',
-            'page callback' => 'cipher_success',
-            'access callback' => TRUE,
-            'type' => MENU_CALLBACK,
-        );
-        return $items;
+    );
+
+    $items['cipher_success_page'] = array(
+        'title' => 'Welcome to the Cipher Zone',
+        'page callback' => 'cipher_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
     }
 
     function cipher_form() {
-        $form['user_input'] = array(
-            '#title' => 'Input',
+        $form['user_value'] = array(
+            '#title' => 'Shift Value',
             '#type' => 'textfield',
-            '#description' => t('Please enter the word you want cipher-ized.'),
+            '#description' => t('Please enter the number of places you want the cipher to shift the letters.'),
+            // '#element_validate' => array('element_validate_integer_positive'),
+            '#required' => TRUE,
+        );
+        $form['user_direction'] = array(
+            '#title' => 'Shift Direction',
+            '#type' => 'textfield',
+            '#description' => t('Please enter the direction you want the letters shifted.'),
+            // '#element_validate' => array('element_validate_integer_positive'),
+            '#required' => TRUE,
+        );
+        $form['user_phrase'] = array(
+            '#title' => 'Phrase',
+            '#type' => 'textfield',
+            '#description' => t('Please enter the phrase you want cipher-ized.'),
             // '#element_validate' => array('element_validate_integer_positive'),
             '#required' => TRUE,
         );
@@ -32,3 +47,22 @@
         );
         return $form;
     }
+
+    function cipher_form_submit($form, &$form_state) {
+        $user_value = $form_state['values']['user_value'];
+        $user_direction = $form_state['values']['user_direction'];
+        $user_phrase = $form_state['values']['user_phrase'];
+        $cipher_output = array($user_value, $user_direction, $user_phrase);
+
+        $_SESSION['cipher_output'] = $cipher_output;
+        $form_state['redirect'] = 'cipher_success_page';
+      }
+
+      function cipher_success() {
+          $output = '<ul>';
+          foreach($_SESSION['cipher_output'] as $value) {
+            $output = $output . '<li>' .$value . '</li>';
+          }
+          $output = $output . '</ul>';
+          return "Hooray! $output";
+      }
