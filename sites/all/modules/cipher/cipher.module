@@ -24,7 +24,7 @@
             '#title' => 'Shift Value',
             '#type' => 'textfield',
             '#description' => t('Please enter the number of places you want the cipher to shift the letters.'),
-            '#element_validate' => array('element_validate_integer_positive'),
+            '#element_validate' => array('element_validate_integer_positive', 'element_validate_range'),
             '#required' => TRUE,
         );
         $form['user_direction'] = array(
@@ -46,6 +46,12 @@
             '#value' => 'Go',
         );
         return $form;
+    }
+
+    function element_validate_range($element) {
+        if ($element['#value'] > 26) {
+            form_error($element, t('Number must be less than or equal to 26.'));
+        }
     }
 
     function element_validate_direction($element) {
@@ -103,5 +109,5 @@
     }
 
     function cipher_success() {
-        return '<p>'.$_SESSION['cipher_output'].'</p>';
+        return '<h1><i>Cipher Success!</i></h1><p>'.$_SESSION['cipher_output'].'</p>';
       }
